@@ -5,10 +5,13 @@ const path = require('path');
 const expressHanlebars = require('express-handlebars');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
+const fileUpload = require('express-fileupload');
 
 //body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+
+app.use(fileUpload());
 
 //database connection
 mongoose.connect('mongodb://localhost:27017/cms', {useNewUrlParser:true}).then(db=>{

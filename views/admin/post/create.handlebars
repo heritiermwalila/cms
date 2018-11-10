@@ -1,8 +1,12 @@
 <h1>Create new post</h1>
-<form action="/admin/post/create" method="POST">
+<form action="/admin/post/create" method="POST" enctype="multipart/form-data">
     <div class="form-group">
-        <label>Post Title</label>
+        <label>Post Title</label><br />
+        {{#each errors}}
+            <small class="text-danger">{{title}}</small>
+        {{/each}}
         <input type="text" class="form-control" id="postTitle" placeholder="Post title" name="postTitle">
+        
     </div>
     <div class="form-group">
         <label>Category</label>
@@ -25,7 +29,14 @@
         <input type="text" class="form-control" id="postTags" placeholder="Post title" name="postTags">
     </div>
     <div class="form-group">
-        <label>Post content</label>
+        <label for="">Feature image</label>
+        <input type="file" name="postImage" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Post content</label><br />
+        {{#each errors}}
+            <small class="text-danger">{{content}}</small>
+        {{/each}}
         <textarea name="postContent" id="postContent" cols="30" rows="6" class="form-control" placeholder="Enter your post content"></textarea>
     </div>
     <div class="form-group">
