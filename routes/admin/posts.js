@@ -71,7 +71,7 @@ router.post('/create', (req, res)=>{
     });
     newPost.save().then((data)=>{
 
-        
+        req.flash('success_message', `The post ${data.postTitle} was created successfully`);
         res.redirect('/admin/post/index');
     })
 
@@ -79,6 +79,19 @@ router.post('/create', (req, res)=>{
 });
 
 router.put('/edit/:id', (req, res)=>{
+
+    //chcek if the file was upload or not
+
+    let filename = 'placeholder.png';
+
+    if(!isEmpty(req.files)){
+
+        let file = req.files.postImage;
+        filename = Date.now() + '-' + file.name;
+
+        file.mv('./public/uploads/' + filename);
+
+    }
 
     let allowComment;
 
@@ -95,6 +108,7 @@ router.put('/edit/:id', (req, res)=>{
         post.postStatus = req.body.postStatus;
         post.postContent = req.body.postContent;
         post.allowComment = allowComment;
+        post.postImage = filename
         
 
        
