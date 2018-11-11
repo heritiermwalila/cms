@@ -1,0 +1,60 @@
+<h1>Add new categories</h1>
+ {{>admin/msg}}
+<div class="row">
+<div class="col-md-4">
+    <form action="/admin/category/create" method="POST">
+        <div class="form-group">
+            <label for="">Category name</label>
+            <input type="text" class="form-control" placeholder="Category name" name="categoryName">
+        </div>
+        <div class="form-group">
+            <label for="">Parent</label>
+            <select name="parentCategory" id="" class="form-control">
+                <option value="">category</option>
+                <option value="">category</option>
+                <option value="">category</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Create category</button>
+    </form>
+</div>
+<div class="col-md-8">
+    
+    <div class="card">
+        <div class="card-header">
+            
+            <h4>All categories</h4>
+        </div>
+        <div class="card-body">
+            <table class="table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="allcheckbox"></th>
+                    <th>Title</th>
+                    <th>Parent</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each categories}}
+                <tr>
+                    <td><input type="checkbox" name=""></td>
+                    <td>{{categoryName}}</td>
+                    <td>Parent</td>
+                    <td></td>
+                    <td>
+                        <a href="/admin/category/edit/{{id}}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
+                        <form action="/admin/category/delete/{{id}}?_method=DELETE" method="POST" class="pull-right">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+</div>

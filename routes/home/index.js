@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const PostModel = require('../../models/Post');
+const CategoryModel = require('../../models/Category');
 
 router.all('/*', (req, res, next)=>{
     res.app.locals.layout = 'home';
@@ -7,8 +9,26 @@ router.all('/*', (req, res, next)=>{
 });
 
 router.get('/', (req, res)=>{
-    res.render('home/index');
+
+    PostModel.find({}).then(posts=>{
+        CategoryModel.find({}).then(categories=>{
+
+            res.render('home/index', {posts:posts, categories:categories});
+        });
+
+    });
 });
+
+router.get('/single/:id', (req, res)=>{
+    PostModel.findOne({_id:req.params.id}).then(post=>{
+
+        CategoryModel.find({}).then(categories=>{
+
+            res.render('home/single', {post:post, categories:categories});
+        })
+        
+    })
+})
 
 router.get('/about', (req, res)=>{
     res.render('home/about')
