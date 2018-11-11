@@ -6,6 +6,12 @@ const expressHanlebars = require('express-handlebars');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const fileUpload = require('express-fileupload');
+const session = require('express-session');
+const flash = require('connect-flash');
+
+
+
+
 
 //body parser
 app.use(bodyParser.json());
@@ -26,18 +32,43 @@ console.log(`You're connected to the database`);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 //handlebars settings and options
-const {select} = require('./helpers/handlebars-helpers');
-app.engine('handlebars', expressHanlebars({defaultLayout:'home', helpers:{select:select}}));
+const {select, dateFormat} = require('./helpers/handlebars-helpers');
+app.engine('handlebars', expressHanlebars({defaultLayout:'home', helpers:{select:select, dateFormat:dateFormat}}));
 
 app.set('view engine', 'handlebars');
+
+//session and flash
+
+app.use(session({
+    secret:'cmsblogsystem',
+    resave:true,
+    saveUninitialized:true
+}));
+app.use(flash());
+
+//make a success message variable locally to be accessible everywhere
+app.use((req, res, next)=>{
+    app.locals = {
+        success_message:req.flash('success_message'),
+        delete_message:req.flash('delete_message'),
+        update_message:req.flash('update_message'),
+        category_created:req.flash('category_created'),
+        category_deleted:req.flash('category_deleted'),
+        category_updated:req.flash('category_updated'),
+    }
+    
+    next();
+})
 
 //load router
 const homeRoutes = require('./routes/home/index');
 const adminRoutes = require('./routes/admin/index');
 const postsRoutes = require('./routes/admin/posts');
+const categoriesRoutes = require('./routes/admin/categories');
 app.use('/', homeRoutes);
 app.use('/admin', adminRoutes);
 app.use('/admin/post', postsRoutes);
+app.use('/admin/category', categoriesRoutes);
 
 
 const port = 5500 || process.env.PORT;

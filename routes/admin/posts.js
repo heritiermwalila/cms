@@ -5,6 +5,7 @@ const PostModel = require('../../models/Post');
 const {isEmpty, uploadDir} = require('../../helpers/upload-files');
 const fs = require('fs');
 const path = require('path');
+const CategoryModel = require('../../models/Category');
 
 // router.all('/*', (req, res, next)=>{
 //     res.app.locals.layout = 'admin';
@@ -12,8 +13,9 @@ const path = require('path');
 // });
 
 router.get('/index', (req, res)=>{
-    PostModel.find({}).then(posts=>{
-
+    PostModel.find({})
+    .populate('categoryId')
+    .then(posts=>{
         res.render('admin/post/index', {posts:posts, layout:'admin'});
     }).catch(err=>{
         res.send('Something went wrong');
@@ -21,17 +23,26 @@ router.get('/index', (req, res)=>{
 });
 router.get('/create', (req, res)=>{
 
-    res.render('admin/post/create');
+    CategoryModel.find({}).then(categories=>{
+
+        res.render('admin/post/create', {categories:categories});
+    })
+
 });
 router.get('/edit/:id', (req, res)=>{
 
     const postId = req.params.id;
     PostModel.findOne({_id:postId}).then(post=>{
 
-        res.render('admin/post/edit', {post:post, layout:'admin'});
+        CategoryModel.find({}).then(categories=>{
+            
+            res.render('admin/post/edit', {post:post, layout:'admin', categories:categories});
+        })
+
     })
 
 });
+
 router.post('/create', (req, res)=>{
 
     //chcek if the file was upload or not
@@ -63,6 +74,7 @@ router.post('/create', (req, res)=>{
     }else{
     //insert data
     const newPost = new PostModel({
+        categoryId:req.body.category,
         postTitle:req.body.postTitle,
         postStatus:req.body.postStatus,
         allowComment:allowComment,
@@ -71,7 +83,7 @@ router.post('/create', (req, res)=>{
     });
     newPost.save().then((data)=>{
 
-        
+        req.flash('success_message', `The post ${data.postTitle} was created successfully`);
         res.redirect('/admin/post/index');
     })
 
@@ -79,6 +91,8 @@ router.post('/create', (req, res)=>{
 });
 
 router.put('/edit/:id', (req, res)=>{
+
+    //chcek if the file was upload or not
 
     let allowComment;
 
@@ -90,16 +104,24 @@ router.put('/edit/:id', (req, res)=>{
 
     PostModel.findOne({_id:req.params.id}).then(post=>{
         
-
+        post.categoryId=req.body.category;
         post.postTitle = req.body.postTitle;
         post.postStatus = req.body.postStatus;
         post.postContent = req.body.postContent;
         post.allowComment = allowComment;
         
+        
+        if(!isEmpty(req.files)){
 
-       
+            let file = req.files.postImage;
+            filename = Date.now() + '-' + file.name;
+            post.postImage = filename
+            file.mv('./public/uploads/' + filename);
+    
+        }
 
         post.save().then(()=>{
+            req.flash('update_message', `The post ${post.postTitle} was updated successfully`);
             res.redirect(req.originalUrl);
         })
 
@@ -117,6 +139,7 @@ router.delete('/delete/:id', (req, res)=>{
                 if(err) console.log(err);
             });
         }
+        req.flash('delete_message', `The post ${post.postTitle} was deleted`);
         res.redirect('/admin/post/index');
     })
 })
