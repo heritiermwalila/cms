@@ -1,4 +1,5 @@
 const express = require('express');
+const {mongodbUrl} = require('./config/config');
 const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
@@ -8,9 +9,7 @@ const methodOverride = require('method-override');
 const fileUpload = require('express-fileupload');
 const session = require('express-session');
 const flash = require('connect-flash');
-
-
-
+const passport = require('passport');
 
 
 //body parser
@@ -20,7 +19,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(fileUpload());
 
 //database connection
-mongoose.connect('mongodb://localhost:27017/cms', {useNewUrlParser:true}).then(db=>{
+mongoose.connect(mongodbUrl, {useNewUrlParser:true}).then(db=>{
 
 console.log(`You're connected to the database`);
 
@@ -46,15 +45,23 @@ app.use(session({
 }));
 app.use(flash());
 
+//initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 //make a success message variable locally to be accessible everywhere
 app.use((req, res, next)=>{
     app.locals = {
+        user:req.user || null,
         success_message:req.flash('success_message'),
         delete_message:req.flash('delete_message'),
         update_message:req.flash('update_message'),
         category_created:req.flash('category_created'),
         category_deleted:req.flash('category_deleted'),
         category_updated:req.flash('category_updated'),
+        register_user:req.flash('register_user'),
+        email_exist:req.flash('email_exist'),
+        error:req.flash('error')
     }
     
     next();
@@ -65,10 +72,14 @@ const homeRoutes = require('./routes/home/index');
 const adminRoutes = require('./routes/admin/index');
 const postsRoutes = require('./routes/admin/posts');
 const categoriesRoutes = require('./routes/admin/categories');
+const commentsRoutes = require('./routes/admin/comments');
+
 app.use('/', homeRoutes);
 app.use('/admin', adminRoutes);
 app.use('/admin/post', postsRoutes);
 app.use('/admin/category', categoriesRoutes);
+app.use('/admin/comment', commentsRoutes);
+
 
 
 const port = 5500 || process.env.PORT;

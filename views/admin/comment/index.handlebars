@@ -1,0 +1,42 @@
+<h1>All comments</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Comment</th>
+            <th>User</th>
+            <th>Post title</th>
+            <th>Date & Time</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each comments}}
+        <tr>
+            <td>ID</td>
+            <td>{{fullName}}<br />
+                <small>{{userEmail}}</small>
+            </td>
+            <td>{{postId.postTitle}}</td>
+            <td>{{#dateFormat commentDate 'Do MMM YYYY H:mm:ss'}}{{/dateFormat}}</td>
+            <td>
+                   
+                        {{#if approve}}
+                        <form action="/admin/comment/desapprove/{{id}}?_method=PUT" method="POST" class="btn-group mr-2">
+                            <button type="submit" class="btn btn-info">Approved</button>
+                        </form>
+                        {{else}}
+                        <form action="/admin/comment/approve/{{id}}?_method=PUT" method="POST" class="btn-group mr-2">
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                        {{/if}}
+                        <form action="/admin/comment/delete/{{id}}?_method=DELETE" method="POST" class="btn-group mr-2">
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                        </form>
+                   
+                    
+           
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

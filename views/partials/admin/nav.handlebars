@@ -37,10 +37,16 @@
             </li>
           </ul>
         </li>
-         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
           <a class="nav-link" href="/admin/category/index">
             <i class="fa fa-fw fa-briefcase"></i>
             <span class="nav-link-text">Categories</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
+          <a class="nav-link" href="/admin/comment/index">
+            <i class="fa fa-fw fa-briefcase"></i>
+            <span class="nav-link-text">Comments</span>
           </a>
         </li>
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
@@ -199,8 +205,8 @@
           </form>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
-            <i class="fa fa-fw fa-sign-out"></i>Logout</a>
+          <a class="nav-link" data-toggle="modal" data-target="#logoutModal">
+            {{#if user}}<i class="fa fa-fw fa-user"></i> {{user.firstName}} {{/if}} <i class="fa fa-fw fa-sign-out"></i>Logout</a>
         </li>
       </ul>
     </div>
