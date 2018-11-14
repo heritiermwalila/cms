@@ -32,6 +32,12 @@ const PostSchema = new Schema({
     postImage:{
         type:String
     },
+    CommentsIds:[{
+        
+        type:Schema.Types.ObjectId,
+        ref:'comments'
+        
+    }],
     createdDate:{
         type:Date,
         default:Date.now(),

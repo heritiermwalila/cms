@@ -8,6 +8,7 @@
             <th>Category</th>
             <th>Status</th>
             <th>Comments</th>
+            <th>Count Comments</th>
             <th>Feature Image</th>
             <th>Create at</th>
             <th>Actions</th>
@@ -21,12 +22,21 @@
             <td>{{categoryId.categoryName}}</td>
             <td>{{postStatus}}</td>
             <td>{{allowComment}}</td>
+            <td>{{CommentsIds.length}}</td>
             <td><img src="/uploads/{{postImage}}" alt="" width="100px" class="img-fluid img-thumbnail"></td>
             <td>{{#dateFormat createdDate 'Do MMM YYYY'}}{{/dateFormat}}</td>
-            <td><a href="/admin/post/edit/{{id}}" class="btn btn-primary"><i class="fa fa-edit"></i></a> 
-            <form action="/admin/post/delete/{{id}}?_method=DELETE" method="POST" class="pull-right">
-            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-            </form></td>
+            <td>
+            <div class="row">
+                <div class="col-sm-4">
+                    <a href="/admin/post/edit/{{id}}" class="btn btn-primary"><i class="fa fa-edit"></i></a> 
+                </div>
+                <div class="col-sm-4">
+                     <form action="/admin/post/delete/{{id}}?_method=DELETE" method="POST">
+                        <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                    </form>
+                </div>
+            </div>
+            </td>
             
         </tr>
         {{/each}}

@@ -6,6 +6,7 @@ const {isEmpty, uploadDir} = require('../../helpers/upload-files');
 const fs = require('fs');
 const path = require('path');
 const CategoryModel = require('../../models/Category');
+const CommentModel = require('../../models/Comment');
 
 // router.all('/*', (req, res, next)=>{
 //     res.app.locals.layout = 'admin';
@@ -14,7 +15,7 @@ const CategoryModel = require('../../models/Category');
 
 router.get('/index', (req, res)=>{
     PostModel.find({})
-    .populate('categoryId')
+    .populate(['categoryId', 'CommentsIds'])
     .then(posts=>{
         res.render('admin/post/index', {posts:posts, layout:'admin'});
     }).catch(err=>{
